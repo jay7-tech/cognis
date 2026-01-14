@@ -1,11 +1,12 @@
-# src/memory/embeddings.py
+# src/cognis/memory/embeddings.py
 
-from langchain.embeddings import HuggingFaceEmbeddings
-from src.config import EMBEDDING_MODEL_NAME
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from cognis.config import EMBEDDING_MODEL_NAME
+
 
 def get_embedding_model():
     """
-    Returns embedding model used for semantic memory.
+    Returns a sentence-transformer embedding model.
     """
     return HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL_NAME

@@ -1,6 +1,7 @@
-# src/memory/retriever.py
+# src/cognis/memory/retriever.py
 
-from src.config import TOP_K
+from cognis.config import TOP_K
+
 
 def get_retriever(vector_store):
     """
