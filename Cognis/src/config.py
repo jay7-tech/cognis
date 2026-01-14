@@ -1,0 +1,2 @@
+import os
+DEBUG = True

@@ -1,0 +1,1 @@
+RAG_PROMPT = 'Answer based on context: {context}'
