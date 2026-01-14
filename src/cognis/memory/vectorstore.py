@@ -1,6 +1,7 @@
-# src/memory/vectorstore.py
+# src/cognis/memory/vectorstore.py
 
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
+
 
 def build_vector_store(chunks, embeddings):
     """

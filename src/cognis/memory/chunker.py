@@ -1,11 +1,12 @@
-# src/memory/chunker.py
+# src/cognis/memory/chunker.py
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from src.config import CHUNK_SIZE, CHUNK_OVERLAP
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from cognis.config import CHUNK_SIZE, CHUNK_OVERLAP
+
 
 def chunk_documents(documents):
     """
-    Splits documents into overlapping semantic chunks.
+    Splits documents into overlapping chunks.
     """
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
