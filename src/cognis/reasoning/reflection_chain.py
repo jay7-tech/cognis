@@ -1,14 +1,13 @@
 # src/cognis/reasoning/reflection_chain.py
 
-from langchain_core.runnables import RunnableLambda, RunnablePassthrough
-
+from langchain_core.runnables import RunnablePassthrough
 from cognis.reasoning.llm import get_llm
 from cognis.reasoning.prompts import REFLECTION_PROMPT
 
 
 def build_reflection_chain(retriever):
     """
-    Builds a reflection reasoning chain using LCEL (LangChain Expression Language)
+    Builds a loop-aware reflection chain using memory + LLM reasoning.
     """
 
     llm = get_llm()
@@ -19,8 +18,8 @@ def build_reflection_chain(retriever):
 
     chain = (
         {
-            "context": RunnableLambda(retrieve_context),
-            "question": RunnablePassthrough(),
+            "context": retrieve_context,
+            "question": RunnablePassthrough()
         }
         | REFLECTION_PROMPT
         | llm
