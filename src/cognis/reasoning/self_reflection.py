@@ -10,7 +10,9 @@ def reflect_and_store(question, retriever, vector_store):
 
     reflection_chain = build_reflection_chain(retriever)
 
-    reflection = reflection_chain.invoke(question)
+    msg = reflection_chain.invoke(question)
+    reflection = msg.content
+
 
     # ✅ Convert to string explicitly
     reflection_text = str(reflection)
