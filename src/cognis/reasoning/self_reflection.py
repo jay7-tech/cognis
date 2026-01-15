@@ -1,25 +1,21 @@
-# src/cognis/reasoning/self_reflection.py
-
+from datetime import datetime
 from cognis.reasoning.reflection_chain import build_reflection_chain
-
 
 def reflect_and_store(question, retriever, vector_store):
     """
-    Reflects on a question and stores the reflection as long-term memory.
+    Reflects on a question and stores the reflection with timestamp metadata.
     """
 
     reflection_chain = build_reflection_chain(retriever)
-
-    msg = reflection_chain.invoke(question)
-    reflection = msg.content
-
-
-    # ✅ Convert to string explicitly
-    reflection_text = str(reflection)
+    reflection = reflection_chain.invoke(question)
 
     vector_store.add_texts(
-        texts=[reflection_text],
-        metadatas=[{"source": "self_reflection"}]
+        [reflection.content],
+        metadatas=[{
+            "source": "self_reflection",
+            "question": question,
+            "timestamp": datetime.utcnow().isoformat()
+        }]
     )
 
-    return reflection_text
+    return reflection.content
