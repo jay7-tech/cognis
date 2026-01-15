@@ -1,45 +1,28 @@
 # src/cognis/reasoning/reflection_chain.py
 
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnablePassthrough
+from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 
 from cognis.reasoning.llm import get_llm
+from cognis.reasoning.prompts import REFLECTION_PROMPT
 
 
 def build_reflection_chain(retriever):
     """
-    Builds a RAG + reflection chain using a local LLM.
+    Builds a reflection reasoning chain using LCEL (LangChain Expression Language)
     """
 
     llm = get_llm()
 
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                "You are Cognis, a personal reflective AI. "
-                "You analyze the user's memories to help them understand patterns "
-                "in their thoughts, struggles, and goals. Stay grounded in memory."
-            ),
-            (
-                "human",
-                """Relevant memory:
-{context}
-
-User question:
-{question}
-
-Give a thoughtful, reflective answer."""
-            ),
-        ]
-    )
+    def retrieve_context(question: str) -> str:
+        docs = retriever.invoke(question)
+        return "\n\n".join(doc.page_content for doc in docs)
 
     chain = (
         {
-            "context": retriever,
+            "context": RunnableLambda(retrieve_context),
             "question": RunnablePassthrough(),
         }
-        | prompt
+        | REFLECTION_PROMPT
         | llm
     )
 
