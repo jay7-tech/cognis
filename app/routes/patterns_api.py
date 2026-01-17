@@ -6,6 +6,8 @@ router = APIRouter()
 @router.get("/temporal")
 def temporal_patterns(request: Request):
     retriever = request.app.state.retriever
+    if not retriever:
+        return []
 
     docs = retriever.invoke(
         "What thoughts or themes keep repeating?"

@@ -5,24 +5,29 @@ from typing import List, Dict
 from langchain_core.documents import Document
 
 
+from datetime import datetime
+
 def track_pattern_over_time(
     documents: List[Document],
     window: str = "day"
 ) -> List[Dict]:
     """
     Tracks recurrence of semantic patterns over time.
-
-    window: "day" | "week" | "month"
+    Improved for robustness: extracts theme from content if missing.
     """
-
     timeline = defaultdict(list)
 
     for doc in documents:
-        timestamp = doc.metadata.get("timestamp")
+        # Fallback timestamp (now) if missing
+        timestamp = doc.metadata.get("timestamp") or datetime.utcnow().isoformat()
+        
+        # Fallback theme: use first line or detect_patterns logic
         theme = doc.metadata.get("theme")
-
-        if not timestamp or not theme:
-            continue
+        if not theme:
+            content = doc.page_content.strip()
+            # Use a simple heuristic: first 30 chars of the first significant line
+            lines = [l for l in content.splitlines() if len(l.strip()) > 5]
+            theme = lines[0][:40] + "..." if lines else "General Thought"
 
         if window == "day":
             bucket = timestamp[:10]  # YYYY-MM-DD
